@@ -1,0 +1,127 @@
+CS 240                          Assignment 5                        Summer 1990
+Given: 7/5/90                                                       Due: 7/12/90
+
+	          Pointers and memory addresses--first experiments
+
+1. Write a program pointer1.c which defines
+--an external pointer-to-double variable ep
+--a local pointer-to-double variable lp
+--an external double ex
+--a local double lx
+In the execution:
+a. print the initial (garbage) values in all 4 variables.  Since ptrs normally
+contain memory addresses, the usual way to print out a ptr p is in hex,
+e.g., printf("%x",p), or printf("0x%x",p) if you want 0x in front.
+b. make ex contain 10 and lx contain 20. Make lp point to lx and
+ep point to ex.  Print the 4 new vals. Note how different
+the pointer values are: they are telling us where in memory C chose
+to allocate storage for ex and lx; the external variable ex is in the data
+area in "low memory" while the local variable lx is "on the stack" in
+high memory (high addresses).
+
+c. Use lp to make lx contain 30.  Then make lp point to ex and
+then use it to add one to ex.  Print the 4 vals.
+
+Note that we have not used ep to point to lx, although, as usual, C allows
+it even if it's dangerous.  If you do this, the ep value is OK as
+long as the current function is executing, but becomes totally
+useless, but remains around in the program, after the return.
+The opposite mixture, using lp to access ex, has no such problem.
+
+2.a. Run the provided program testptr under gdb and find the location
+in memory and contents of each in-scope variable at the three
+breakpoints defined below.  Record an observation
+as follows: if variable a is found to be located at address 0x20034
+with contents integer 1, write "a : (0x20034) = 1".  Parentheses are
+commonly used to mean "contents of" in lower-level programming.
+To find the location of a, do "p &a" in gdb.
+breakpoint "main": in main, just before the first call to subr.
+breakpoint "subr0": in original call to subr, just before the recursive call.
+breakpoint "subr1": in the recursive call to subr, just before returning.
+b. Find the addresses of main, subr and printf ("p main" in gdb).
+c. Sort your observed addresses into three groups, as follows:
+i. places in the code: main, subr, printf
+ii. places in data segment: Externals and internal statics are here,
+   a, b, c, and one other are here. Note that these variables always
+   have the same address--they "own" these homes in memory.
+c. places on stack: the local variables are here.  List them in
+   order of increasing address, for ex., if you found that variable
+   t was located at address 0xefffabc at breakpoint subr0, list it as
+   "(0xefffabc) = 3 : t for subr0".   Which way does the stack grow?
+d. From this data, find the range of code addresses (min to max),
+external/static data addresses, and stack addresses you found, and
+make a rough memory map like this:
+
+         code           data seg                            stack
+0    |----------|    |----------|                          |----|
+|------------------------------------------------------------------
+      0x? - 0x?          0x? - 0x?                           0x?-0x?
+
+Make the stack into an arrow showing which way it grows.
+You don't need to typescript the gdb run here: just record the names
+and locations you found, and the memory map, in file meminfo.doc.
+cat typescript
+Script started on Mon Jul  9 20:42:12 1990
+ra% gcc -o pointer1 pointer1.c
+ra% 
+ra% 
+ra% pointer1
+external ptr: 0x0	external var: 0.000000
+local ptr:    0x0	local var     0.000000
+
+external ptr: 0x23120	external var: 10.000000
+local ptr:    0xefffbc4	local var     20.000000
+
+external ptr: 0x23120	external var: 11.000000
+local ptr:    0x23120	local var     30.000000
+
+ra% 
+ra% 
+ra% cat pointer1.c
+/* Eric Gates - HW 1 part 1 - cs240 - 7/8/90 */
+#include <stdio.h>
+
+double *ep;            /* external pointer */
+double ex;             /* external variable */
+void printval(double *, double, double *, double);
+		    /* function to print values */
+
+/* prints garbage values of vars and ptrs then prints values after assign */
+main()
+{
+    double *lp;        /* local pointer */
+    double lx;         /* local variable */
+
+    printval(ep,ex,lp,lx);
+    ex = 10;
+    lx = 20;
+    ep = &ex;
+    lp = &lx;
+    printval(ep,ex,lp,lx);
+    *lp = 30;
+    lp = &ex;
+    (*lp)++;
+    printval(ep,ex,lp,lx);
+}
+
+/* printval - prints the values for this program */
+void printval(double *ep, double ex, double *lp, double lx) 
+{
+    printf("external ptr: 0x%x\texternal var: %f\n",ep,ex);
+    printf("local ptr:    0x%x\tlocal var     %f\n",lp,lx);
+    printf("\n");
+}     
+
+ra% ll
+total 32
+drwxr-xr-x  2 egates        512 Jul  9 20:42 ./
+drwxrwx---  8 egates        512 Jul  8 23:09 ../
+-rwxr-xr-x  1 egates      27643 Jul  9 20:42 pointer1*
+-rw-r--r--  1 egates        864 Jul  9 20:40 pointer1.c
+-rw-r--r--  1 egates        782 Jul  9 20:31 pointer1.test
+-rw-r--r--  1 egates        718 Jul  9 20:31 pointer1.works
+-rw-r--r--  1 egates          0 Jul  9 20:42 typescript
+ra% exit
+ra% 
+script done on Mon Jul  9 20:43:34 1990
+ra% 

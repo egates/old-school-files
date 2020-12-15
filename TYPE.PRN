@@ -1,0 +1,557 @@
+cat typescript
+Script started on Tue Jul  3 22:49:34 1990
+ra% cat buggy.typ
+Script started on Sun Jul  1 12:51:17 1990
+ra% gcc -g -o buggy buggy.c
+ra% ll
+total 35
+drwxr-xr-x  2 egates        512 Jul  1 12:51 ./
+drwxrwx---  7 egates        512 Jul  1 12:47 ../
+-rwxr-xr-x  1 egates      32768 Jul  1 12:51 buggy*
+-rw-r--r--  1 egates        639 Jul  1 12:49 buggy.c
+-rw-r--r--  1 egates          0 Jul  1 12:51 typescript
+ra% gdb buggy
+GDB 3.5, Copyright (C) 1989 Free Software Foundation, Inc.
+There is ABSOLUTELY NO WARRANTY for GDB; type "info warranty" for details.
+GDB is free software and you are welcome to distribute copies of it
+ under certain conditions; type "info copying" to see the conditions.
+Reading symbol data from /u/ra/cs/sum90/240/egates/cs240/hw4/buggy...done.
+Type "help" for a list of commands.
+(gdb) help
+List of classes of commands:
+
+running -- Running the program.
+stack -- Examining the stack.
+data -- Examining data.
+breakpoints -- Making program stop at certain points.
+files -- Specifying and examining files.
+status -- Status inquiries.
+support -- Support facilities.
+user -- User-defined commands.
+alias -- Aliases of other commands.
+obscure -- Obscure features.
+
+Type "help" followed by a class name for a list of commands in that class.
+Type "help" followed by command name for full documentation.
+Command name abbreviations are allowed if unambiguous.
+(gdb) help breakpoints
+Making program stop at certain points.
+
+List of commands:
+
+break -- Set breakpoint at specified line or function.
+clear -- Clear breakpoint at specified line or function.
+delete -- Delete some breakpoints or auto-display expressions.
+disable -- Disable some breakpoints or auto-display expressions.
+enable -- Enable some breakpoints or auto-display expressions.
+tbreak -- Set a temporary breakpoint.  Args like "break" command.
+condition -- Specify breakpoint number N to break only if COND is true.
+commands -- Set commands to be executed when a breakpoint is hit.
+ignore -- Set ignore-count of breakpoint number N to COUNT.
+
+Type "help" followed by command name for full documentation.
+Command name abbreviations are allowed if unambiguous.
+(gdb) help run
+Start debugged program.  You may specify arguments to give it.
+Args may include "*", or "[...]"; they are expanded using "sh".
+Input and output redirection with ">", "<", or ">>" are also allowed.
+
+With no arguments, uses arguments last specified (with "run" or "set args".
+To cancel previous arguments and run with no arguments,
+use "set args" without arguments.
+(gdb) help running
+Running the program.
+
+List of commands:
+
+kill -- Kill execution of program being debugged.
+handle -- Specify how to handle a signal.
+run -- Start debugged program.  You may specify arguments to give it.
+cont -- Continue program being debugged, after signal or breakpoint.
+jump -- Continue program being debugged at specified line or address.
+until -- Execute until the program reaches a source line greater than the current
+step -- Step program until it reaches a different source line.
+next -- Step program, proceeding through subroutine calls.
+finish -- Execute until selected stack frame returns.
+nexti -- Step one instruction, but proceed through subroutine calls.
+stepi -- Step one instruction exactly.
+signal -- Continue program giving it signal number SIGNUMBER.
+detach -- Detach the process previously attached.
+attach -- Attach to a process that was started up outside of GDB.
+tty -- Set terminal for future runs of program being debugged.
+set environment -- Set environment variable value to give the program.
+set args -- Specify arguments to give program being debugged when it is started.
+---Type <return> to continue--- 
+delete environment -- Cancel environment variable VAR for the program.
+
+Type "help" followed by command name for full documentation.
+Command name abbreviations are allowed if unambiguous.
+(gdb) break main
+Reading in symbols for buggy.c...done.
+Breakpoint 1 at 0x20b6: file buggy.c, line 11.
+(gdb) run
+Starting program: /u/ra/cs/sum90/240/egates/cs240/hw4/buggy 
+
+Bpt 1, main () (buggy.c line 11)
+11	   printf ("The number is %d\n", atoi(str));
+(gdb) p str
+$1 = {"1234\000"}
+(gdb) step
+atoi (s=(char *) 0x20034 "1234") (buggy.c line 19)
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+(gdb) p 1 i
+$2 = 251657108
+(gdb) p s
+$3 = (char *) 0x20034 "1234"
+(gdb) p s[p 1 i]
+ptrace: I/O error.
+Cannot read memory: address 0xf01fbc8 out of bounds.
+(gdb) s
+21	   sign = (s[i] == '-') ? -1 : 1;
+(gdb) p i
+$4 = 0
+(gdb) p s
+$5 = (char *) 0x20034 "1234"
+(gdb) p s[i]
+$6 = 49 '1'
+(gdb) p sign
+$7 = 3
+(gdb) s
+22	   if (s[i] = '-')                   /* skip sign character */
+(gdb) p sign
+$8 = 1
+(gdb) help
+List of classes of commands:
+
+running -- Running the program.
+stack -- Examining the stack.
+data -- Examining data.
+breakpoints -- Making program stop at certain points.
+files -- Specifying and examining files.
+status -- Status inquiries.
+support -- Support facilities.
+user -- User-defined commands.
+alias -- Aliases of other commands.
+obscure -- Obscure features.
+
+Type "help" followed by a class name for a list of commands in that class.
+Type "help" followed by command name for full documentation.
+Command name abbreviations are allowed if unambiguous.
+(gdb) help data
+Examining data.
+
+List of commands:
+
+print -- Print value of expression EXP.
+set -- Perform an assignment VAR = EXP.
+set variable -- Perform an assignment VAR = EXP.
+set array-max -- Set NUMBER as limit on string chars or array elements to print.
+output -- Like "print" but don't put in value history and don't print newline.
+printf -- printf "printf format string", arg1, arg2, arg3, ..., argn
+display -- Print value of expression EXP each time the program stops.
+undisplay -- Cancel some expressions to be displayed when program stops.
+whatis -- Print data type of expression EXP.
+ptype -- Print definition of type TYPE.
+disassemble -- Disassemble a specified section of memory.
+x -- Examine memory: x/FMT ADDRESS.
+delete display -- Cancel some expressions to be displayed when program stops.
+disable display -- Disable some expressions to be displayed when program stops.
+enable display -- Enable some expressions to be displayed when program stops.
+
+Type "help" followed by command name for full documentation.
+Command name abbreviations are allowed if unambiguous.
+(gdb) list
+17	   int i, n, sign;
+18	
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+20		    ;
+21	   sign = (s[i] == '-') ? -1 : 1;
+22	   if (s[i] = '-')                   /* skip sign character */
+23	       i++;
+24	   for (n = 0; isdigit(s[i]); i++)
+25	       n = 10 * n + (s[i] - '0');
+26	   return sign * n;
+(gdb) s
+23	       i++;
+(gdb) p i
+$9 = 0
+(gdb) s
+24	   for (n = 0; isdigit(s[i]); i++)
+(gdb) p i
+$10 = 1
+(gdb) p s[i]
+$11 = 50 '2'
+(gdb) s
+25	       n = 10 * n + (s[i] - '0');
+(gdb) p i
+$12 = 1
+(gdb) p n
+$13 = 0
+(gdb) s
+24	   for (n = 0; isdigit(s[i]); i++)
+(gdb) p n
+$14 = 2
+(gdb) p i
+$15 = 1
+(gdb) c s
+0x2132	24	   for (n = 0; isdigit(s[i]); i++)
+(gdb) p i
+$16 = 2
+(gdb) c
+Continuing.
+The number is 234
+
+Program exited normally.
+(gdb) l
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+20		    ;
+21	   sign = (s[i] == '-') ? -1 : 1;
+22	   if (s[i] = '-')                   /* skip sign character */
+23	       i++;
+24	   for (n = 0; isdigit(s[i]); i++)
+25	       n = 10 * n + (s[i] - '0');
+26	   return sign * n;
+27	}
+(gdb) r
+Starting program: /u/ra/cs/sum90/240/egates/cs240/hw4/buggy 
+
+Bpt 1, main () (buggy.c line 11)
+11	   printf ("The number is %d\n", atoi(str));
+(gdb) s
+atoi (s=(char *) 0x20034 "1234") (buggy.c line 19)
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+(gdb) p i
+$17 = 251657108
+(gdb) s
+21	   sign = (s[i] == '-') ? -1 : 1;
+(gdb) p i
+$18 = 0
+(gdb) s
+22	   if (s[i] = '-')                   /* skip sign character */
+(gdb) p i
+$19 = 0
+(gdb) s
+23	       i++;
+(gdb) p i
+$20 = 0
+(gdb) s
+24	   for (n = 0; isdigit(s[i]); i++)
+(gdb) p i
+$21 = 1
+(gdb) l
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+20		    ;
+21	   sign = (s[i] == '-') ? -1 : 1;
+22	   if (s[i] = '-')                   /* skip sign character */
+23	       i++;
+24	   for (n = 0; isdigit(s[i]); i++)
+25	       n = 10 * n + (s[i] - '0');
+26	   return sign * n;
+27	}
+(gdb) p s
+$22 = (char *) 0x20034 "-234"
+(gdb) p ((s[0] = '-')
+$23 = 45 '-'
+(gdb) p (s[0] = == '-')
+$24 = 1
+(gdb) c
+Continuing.
+The number is 234
+
+Program exited normally.
+(gdb) exit
+Undefined command: "exit".
+(gdb) quit
+ra% vi buggy.c
+"buggy.c" 27 lines, 639 characters /* program for hw4--you find the bug with gdb */
+/* don't forget to compile it with -g:	gcc -g buggy.c */
+
+#include <ctype.h>
+
+char str[] = "1234";	/* char string atoi converts when called */
+
+/* main program to exercise the atoi function */
+main()
+{
+  printf ("The number is %d\n", atoi(str));
+}
+
+/* atoi: convert s to integer */
+int atoi(char s[])
+{
+  int i, n, sign;
+
+   for (i = 0; isspace(s[i]); i++)   /* skip spaces */;
+   sign = (s[i] == '-') ? -1 : 1;
+   if (s[i] = '-')			/* skip sign character */
+	i++;"buggy.c" 27 lines, 639 characters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+   if (s[i] == '-')			 /* skip sign character */		
+
+"buggy.c" 27 lines, 640 characters ra% gcc -g -o buggy.fix buggy.c
+ra% gdb buggy.fix
+GDB 3.5, Copyright (C) 1989 Free Software Foundation, Inc.
+There is ABSOLUTELY NO WARRANTY for GDB; type "info warranty" for details.
+GDB is free software and you are welcome to distribute copies of it
+ under certain conditions; type "info copying" to see the conditions.
+Reading symbol data from /u/ra/cs/sum90/240/egates/cs240/hw4/buggy.fix...done.
+Type "help" for a list of commands.
+(gdb) break main
+Reading in symbols for buggy.c...done.
+Breakpoint 1 at 0x20b6: file buggy.c, line 11.
+(gdb) run
+Starting program: /u/ra/cs/sum90/240/egates/cs240/hw4/buggy.fix 
+
+Bpt 1, main () (buggy.c line 11)
+11	   printf ("The number is %d\n", atoi(str));
+(gdb) s
+atoi (s=(char *) 0x20034 "1234") (buggy.c line 19)
+19	   for (i = 0; isspace(s[i]); i++)   /* skip spaces */
+(gdb) s
+21	   sign = (s[i] == '-') ? -1 : 1;
+(gdb) s p i
+$1 = 0
+(gdb) s
+22	   if (s[i] == '-')                   /* skip sign character */
+(gdb) p i
+$2 = 0
+(gdb) s
+0x212e	23	       i++;
+(gdb) p i
+$3 = 0
+(gdb) s
+24	   for (n = 0; isdigit(s[i]); i++)
+(gdb) p i
+$4 = 0
+(gdb) s  p s
+$5 = (char *) 0x20034 "1234"
+(gdb) s
+25	       n = 10 * n + (s[i] - '0');
+(gdb) p i
+$6 = 0
+(gdb) p n
+$7 = 0
+(gdb) c
+Continuing.
+The number is 1234
+
+Program exited normally.
+(gdb) quit
+ra% exit
+ra% 
+script done on Sun Jul  1 13:15:06 1990
+
+script done on Sun Jul  1 13:15:06 1990
+ra% cat buggy.ans
+   The problem with buggy.c was in the expression if (s[i] = '0') i++;.
+This command will assign to s[i] (i=0 at this point) the character '-'.
+It should instead read if (s[i] == '0') i++;.  This change has been tried
+and it does solve the problem.  After this above statement, s = '-234' and i
+would be incremented to one since s[i] = '-' is true (s[i] gets '-') the
+conversion loop would then start with i = 1 completely ignoring the '-' in
+s[0].
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% 
+ra% gcc -o cl alcit main.c stack.o getop.o getch.o
+ra% 
+ra% 
+ra% calcit
+7 8 + 2 2 + 1 | &
+	5
+7 8 + 2 2+1|&~
+	-6
+
+error: stack empty
+	0
+^Dra% 
+ra% 
+ra% cat calc.h
+
+#define NUMBER '0'
+void push(int);
+int pop(void);
+int getop(char []);
+int getch(void);
+void ungetch(int);
+
+ra% cat main.c
+#include <stdio.h>
+#include "calc.h"       /* declarations for calculator */
+#define MAXOP 100       /* max size of operand or operator */
+
+/* reverse Polish notation calculator */
+main()
+{
+   int type;
+   int op2;
+   char s[MAXOP];
+
+   while ((type = getop(s)) != EOF)
+     {  switch (type)
+	 {  case NUMBER:
+	       push(atoi(s));
+	       break;
+	    case '+':
+	       push(pop() + pop());
+	       break;
+            case '*':
+	       push(pop() * pop());
+	       break;
+            case '-':
+	       op2 = pop();
+	       push(pop() - op2);
+	       break;
+            case '/':
+	       op2 = pop();
+	       if (op2 != 0)
+                  push(pop() / op2);
+               else
+		  printf("error: divide by zero\n");
+               break;
+            case '|':
+	       push((int) ((unsigned)pop() | (unsigned)pop()));
+	       break;
+            case '&':
+               push((int) ((unsigned) pop() & (unsigned) pop()));
+               break;
+            case '~':
+	       push((int) ((unsigned) ~pop()));
+	       break;
+            case '\n':
+	       printf("\t%d\n", pop());
+	       break;
+            default:
+	       printf("error: unknown command %s\n",s);
+	       break;
+         }     
+     }
+     return 0;
+}
+
+ra% cat stack.c
+#include <stdio.h>
+#include "calc.h"       /* calculator declarations */
+#define MAXVAL 100      /* maximum size of val stack */
+
+int sp = 0;             /* stack pointer */
+int val[MAXVAL];        /* stack of integers */
+
+/* push - pushes f onto the stack */
+void push(int f)
+{
+   if (sp < MAXVAL)
+      val[sp++] = f;          /* put f on stack and move stack pointer */
+   else
+      printf("error: stack full, can't push %d\n", f);
+}
+
+/* pop - pop and return value at top of stack */
+int pop(void)
+{
+   if (sp > 0)
+       return (int) val[--sp];       /* return value and move stack pointer */
+   else {
+      printf("error: stack empty\n");
+      return 0;
+     }
+}
+
+ra% cat getop.c
+#include <stdio.h>
+#include <ctype.h>      /* for isdigit */
+#include "calc.h"       /* declarations for calculator */
+
+/* getop: get next operator or operand */
+int getop(char s[])
+{
+   int i, c;
+
+   while ((s[0] = c = getch()) == ' ' || c == '\t')
+	    ;
+   s[1] = '\0';
+   if (!isdigit(c))
+      return c;        /* not a number */
+   i = 0;
+   if (isdigit(c))     /* collect the number */
+      while (isdigit(s[++i] = c = getch()))
+	   ;
+   s[i] = '\0';
+   if (c != EOF)
+      ungetch(c);
+   return NUMBER;
+}
+
+ra% cat getch.c
+#include <stdio.h>
+
+#define BUFSIZE 100
+
+char buf[BUFSIZE];                /* buffer for ungetch */
+int bufp = 0;                     /* buffer pointer */
+
+int getch(void)           /* get a (possibly pushed back) character */
+{
+    return (bufp > 0) ? buf[--bufp] : getchar();
+}
+
+void ungetch(int c)       /* push characters back on input */
+{
+   if (bufp >= BUFSIZE)
+      printf("ungetch: too many characters\n");
+   else
+      buf[bufp++] = c;
+}
+
+ra% 
+ra% 
+ra% 
+ra% ll
+total 124
+drwxr-xr-x  2 egates        512 Jul  3 22:52 ./
+drwxrwx---  7 egates        512 Jul  1 12:47 ../
+-rwxr-xr-x  1 egates      32768 Jul  1 12:51 buggy*
+-rw-r--r--  1 egates        449 Jul  1 13:24 buggy.ans
+-rw-r--r--  1 egates        640 Jul  1 13:11 buggy.c
+-rwxr-xr-x  1 egates      32768 Jul  1 13:12 buggy.fix*
+-rw-r--r--  1 egates      10946 Jul  1 13:15 buggy.typ
+-rw-r--r--  1 egates        108 Jul  3 20:06 calc.h
+-rwxr-xr-x  1 egates      28001 Jul  3 22:52 calcit*
+-rw-r--r--  1 egates        451 Jul  3 22:05 getch.c
+-rw-r--r--  1 egates        496 Jul  3 22:39 getch.o
+-rw-r--r--  1 egates        515 Jul  3 22:07 getop.c
+-rw-r--r--  1 egates        390 Jul  3 22:07 getop.o
+-rw-r--r--  1 egates       1220 Jul  3 22:39 main.c
+-rw-r--r--  1 egates        672 Jul  3 20:38 stack.c
+-rw-r--r--  1 egates        410 Jul  3 20:38 stack.o
+-rw-r--r--  1 egates       8192 Jul  3 22:50 typescript
+ra% exit
+ra% 
+script done on Tue Jul  3 22:59:29 1990
+ra% 
