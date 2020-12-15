@@ -12,7 +12,7 @@ TYPE
      SortArray = ARRAY [0..sortlim] OF RecordType;
 
 VAR
-     A,B,C,D,E,F,G       : SortArray;
+     A,B,C,D,E,F,G,H,I   : SortArray;
      First,Last          : integer;
      CmpCnt,SwtCnt,AsgCnt: integer;
 
@@ -142,23 +142,23 @@ END;  {PRINT}
    END;  {if}
      CASE Srt OF
        1 : Writeln('Bubble','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        2 : Writeln('Insert','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        3 : Writeln('Select','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        4 : Writeln('Heap  ','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        5 : Writeln('Quick-R ','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        6 : Writeln('Quick -NR','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        7 : Writeln('AQuick - R','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        8 : Writeln('AQuick -NR','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
        9 : Writeln('Shell','   ',Len,'   ',SwtCnt,'  ',AsgCnt,'  ',
-                   CmpCnt,'   ',AsgCnt+CmpCnt);
+                   CmpCnt,'   ',AsgCnt+CmpCnt,Stable(A,Last));
      END;  {case}
   END;  {report}
 
@@ -421,7 +421,7 @@ PROCEDURE nrquicksort ( VAR A : sortarray ; first, last : integer );
   (* implements a non recursive version of quicksort with a pair
      of stacks that keep track of the boundaries for the partitioned sets *)
 CONST
-      maxstack   = 1;
+      maxstack   = round(ln(sortlim)/ln(2))+1; (* log(n) choice *)
 TYPE
       stacktype  = ARRAY [1..maxstack] OF 0..sortlim;
 VAR
@@ -549,7 +549,7 @@ PROCEDURE NrAltQuickSort( VAR A : sortarray; first, last: integer);
       uses two stacks to keep track of ends of partitioned sets *)
 
 CONST
-    maxstack = 1;
+    maxstack = round(ln(sortlim)/ln(2))+1; (* tight but adequate estimate *)
 TYPE
     stacktype = array [1..maxstack] OF integer;
 VAR
@@ -639,9 +639,11 @@ BEGIN  {SortMeas}
    B := A;
    C := A;
    D := A;
-   e := a;
-   f := a;
-   g := a;
+   E := A;
+   F := A;
+   G := A;
+   H := A;
+   I := A;
    First := 1;
    BubbleSort(A,First,Last);
    Report(1,Last);
@@ -663,11 +665,19 @@ BEGIN  {SortMeas}
    Report(5,Last);
    First := 1;
    asgcnt:=0;swtcnt:=0;cmpcnt:=0;
-   AltQuickSort(F,First,Last);
+   NRQuickSort(F,First,Last);
+   Report(6,Last);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   AltQuickSort(G,First,Last);
    Report(7,Last);
    First := 1;
    asgcnt:=0;swtcnt:=0;cmpcnt:=0;
-   ShellSort(g,First,Last);
+   NRAltQuickSort(H,First,Last);
+   Report(8,Last);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   ShellSort(I,First,Last);
    report(9,last);
 END.
 

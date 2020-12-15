@@ -53,4 +53,20 @@ BEGIN (* pop *)
      END
 END   (* pop *);
 (***********************************************************************)
+
+FUNCTION PopCheck(var X: TreeType;
+                  var S: StackType): boolean;
+    {returns false if tos = ( else return true}
+
+BEGIN  {PopCheck}
+   IF NOT Pop(X,S)
+   THEN Error('Error')
+   ELSE IF (X^.Node = LPAREN)
+        THEN BEGIN
+                PopCheck := False;
+                Push(X,S);
+             END
+        ELSE PopCheck := True;
+END;  {PopCheck}
+(***********************************************************************)
 

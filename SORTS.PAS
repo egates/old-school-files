@@ -8,22 +8,22 @@
   value and the index last will always be < SORTLIM in value, so that positions
   0 and SORTLIM are available for "dummy" storage bins,  if needed.  (Note that
   some of the sorts given take advantage of that fact.) These sorts are "in lo-
-  cation" sorts, i.e., they do not create an auxiliary array  in  which  to put 
-  the sorted list but do everything within the same list. 
+  cation" sorts, i.e., they do not create an auxiliary array  in  which  to put
+  the sorted list but do everything within the same list.
 
-            written by John A. Lutts (from various places) 11/86 
+            written by John A. Lutts (from various places) 11/86
             revised by JAL on 7/9/89 and 3/31/90
- 
+
   HERE IS THE DECLARATION PART TO BE USED: *)
 
      CONST  sortlim = 1001; (* to accomodate up to 1000 records for sorting *)
-     TYPE 
+     TYPE
        ET = integer;
        RecordType = RECORD
-           key : ET; 
+           key : ET;
            position: 0..sortlim
        END;
-       SortArray = ARRAY [0..sortlim] OF RecordType;                         
+       SortArray = ARRAY [0..sortlim] OF RecordType;
 
 (* ------------------------------------------------------------------------- *)
 (* Utility for almost all the sorts given below *)
@@ -55,7 +55,7 @@ BEGIN (* BubbleSort *)
         END;
     pass := pass+1
   UNTIL (sw=0) OR (pass>=last)
-END   (* BubbleSort *); 
+END   (* BubbleSort *);
 
 
 
@@ -67,12 +67,12 @@ END   (* BubbleSort *);
 (* ------------------------------------------------------------------------- *)
 (* InsertSort *)
 
-PROCEDURE InsertSort(VAR A : SortArray; first, last: integer); 
+PROCEDURE InsertSort(VAR A : SortArray; first, last: integer);
 
   (* with A[first] to A[pass-1] in place,  it finds the right place for A[pass]
      relative to A[first]..A[pass-1];  it starts  its search  at the spot whose
      index is pass and goes down to the spot  whose index  is first;  it slides
-     the A[j]'s  to the right  as it goes  so as to make room for the one to be 
+     the A[j]'s  to the right  as it goes  so as to make room for the one to be
      inserted at the right spot *)
 
 VAR
@@ -92,7 +92,7 @@ BEGIN (* InsertSort *)
       A[pos+1] := temp (* put value in right spot *);
       A[first-1] := A[0] (* restore the value *)
   END (* FOR pass *)
-END   (* InsertSort *); 
+END   (* InsertSort *);
 
 (* ------------------------------------------------------------------------- *)
 (* SelectSort *)
@@ -108,14 +108,14 @@ VAR
 
 BEGIN (* SelectSort *)
   FOR pass := first TO last-1 DO BEGIN
-      minplc := pass+1; (* minplc is position of the current 
+      minplc := pass+1; (* minplc is position of the current
                            smallest key during the search *)
       FOR pos := pass+2 TO last DO
           IF ( A[pos].key<A[minplc].key ) THEN minplc := pos;
       IF ( A[minplc].key<A[pass].key ) THEN
          Switch( A[minplc], A[pass] )
   END (* FOR pass *)
-END   (* SelectSort *); 
+END   (* SelectSort *);
 
 
 
@@ -133,7 +133,7 @@ END   (* SelectSort *);
 (* ------------------------------------------------------------------------- *)
 (* Heap Sort *)
 
-PROCEDURE PushDown ( VAR A                        : SortArray; 
+PROCEDURE PushDown ( VAR A                        : SortArray;
 		     sortstart, tmpstart, tmpfinish : integer );
   (* This is the work horse in HeapSort : it essentially pushes A[tmpstart] down
      the tree consisting of all items from A[sortstart]..A[tmpfinish] until the
@@ -143,25 +143,25 @@ VAR
 BEGIN (* PushDown *)
    r := tmpstart-sortstart+1;
    WHILE ( r <= (tmpfinish-sortstart+1) DIV 2 ) DO BEGIN
-      IF ( r = (tmpfinish-sortstart+1) DIV 2 ) AND 
+      IF ( r = (tmpfinish-sortstart+1) DIV 2 ) AND
          ( (tmpfinish-sortstart+1) MOD 2 = 0 ) THEN
          (* A[sortstart-1 + r] has one child at place sortstart-1 + 2*r *)
          BEGIN
            IF ( A[sortstart-1 + r].key < A[sortstart-1 + 2*r].key ) THEN
-                Switch( A[sortstart-1+r], A[sortstart-1+2*r] ); 
-           r := tmpfinish-sortstart+1 (* stop loop *); 
+                Switch( A[sortstart-1+r], A[sortstart-1+2*r] );
+           r := tmpfinish-sortstart+1 (* stop loop *);
          END
       ELSE (* every parent has two children *)
          IF ( A[sortstart-1 + r].key < A[sortstart-1 + 2*r].key ) THEN
              IF ( A[sortstart-1 + 2*r].key < A[sortstart-1 + 2*r+1].key ) THEN
                 (* exchange value of parent and right child *)
                 BEGIN
-                    Switch( A[sortstart-1 + r], A[sortstart-1 + 2*r+1] ); 
+                    Switch( A[sortstart-1 + r], A[sortstart-1 + 2*r+1] );
                     r := 2*r+1  (* move on down *);
                 END
              ELSE (* exchange value of parent with leftchild *)
                 BEGIN
-                  Switch( A[sortstart-1 + r], A[sortstart-1 + 2*r] ); 
+                  Switch( A[sortstart-1 + r], A[sortstart-1 + 2*r] );
                   r := 2*r  (* move on down *)
                 END
          ELSE IF ( A[sortstart-1 + r].key < A[sortstart-1 + 2*r+1].key ) THEN
@@ -205,7 +205,7 @@ PROCEDURE partition( VAR A : sortarray; lo, hi : integer; VAR pivloc : integer);
      if lo<=i< pivloc, then A[i].key<A[pivloc].key; and if pivloc<=i<=hi, then
      A[pivloc].key>=A[i].key; thus the list from position lo to position hi is
      divided into two parts all in left part (coming before the pivloc spot)
-     are smaller than all in right part. The place designated pivloc is 
+     are smaller than all in right part. The place designated pivloc is
      a dividing value *)
 
 VAR  piv : integer; (* key value *)
@@ -268,11 +268,11 @@ END   (* quicksort *);
 PROCEDURE nrquicksort ( VAR A : sortarray ; first, last : integer );
   (* implements a non recursive version of quicksort with a pair
      of stacks that keep track of the boundaries for the partitioned sets *)
-CONST 
+CONST
       maxstack   = round(ln(sortlim)/ln(2))+1; (* log(n) choice *)
-TYPE  
+TYPE
       stacktype  = ARRAY [1..maxstack] OF 0..sortlim;
-VAR 
+VAR
     pivloc           : integer;
     lostack, histack : stacktype;
     nstack           : integer;
@@ -288,13 +288,13 @@ BEGIN
     WHILE (first<last) (* AND (NOT error) *) DO BEGIN
        partition (A, first, last, pivloc);
        (* overflow check has been omitted since the two stacks are big
-          enough even in worst cases 
+          enough even in worst cases
           IF (nstack>=maxstack) THEN
-             BEGIN 
+             BEGIN
                error := true; writeln('sort terminated, stack overflow')
              END
-          ELSE *) 
-       IF (pivloc-first) < (last-pivloc) THEN 
+          ELSE *)
+       IF (pivloc-first) < (last-pivloc) THEN
        (* push larger sublist boundaries onto stack and do smaller list *)
           BEGIN
 	    nstack := nstack+1;      lostack[nstack] := pivloc+1;
@@ -342,7 +342,7 @@ VAR  k : integer;
 BEGIN (* Pivot *)
   k := i+1;
   WHILE ( k<=j ) AND ( A[k].key=A[i].key ) DO k := k+1;
-  IF ( k=j+1 ) THEN 
+  IF ( k=j+1 ) THEN
      Pivot := 0   (* all keys were the same in this range *)
   ELSE IF ( A[k].key>A[i].key ) THEN
      Pivot := k
@@ -352,7 +352,7 @@ END   (* Pivot *);
 
 FUNCTION PartitionBoundary( VAR A : SortArray; i, j, piv : integer ) : integer;
 
-   (* let divider = A[piv].key at start; rearranges A[i]..A[j] so that all  the 
+   (* let divider = A[piv].key at start; rearranges A[i]..A[j] so that all  the
       A[t]'s with A[t].key<divider are on the left  and  all  the  A[t]'s  with
       A[t].key>=divider are on the right &  then returns the index of the array
       element that is at the boundary of the two halves of the array. *)
@@ -399,15 +399,15 @@ END   (* AltQuickSort *);
 
 PROCEDURE NrAltQuickSort( VAR A : sortarray; first, last: integer);
 
-   (* Sorts A from A[first] to A[last] by the partition method; 
+   (* Sorts A from A[first] to A[last] by the partition method;
       uses two stacks to keep track of ends of partitioned sets *)
 
-CONST 
+CONST
 	maxstack = round(ln(sortlim)/ln(2))+1; (* tight but adequate estimate *)
-TYPE  
+TYPE
 	stacktype = array [1..maxstack] OF integer;
-VAR  
-	pivindex, k      : integer; 
+VAR
+	pivindex, k      : integer;
 	nstack           : 0..maxstack;
 	lostack, histack : stacktype;
 
@@ -415,8 +415,8 @@ BEGIN (* NrAltQuickSort *)
   nstack := 0;
   REPEAT
     IF (nstack>0) THEN (* pop both stacks *)
-       BEGIN 
-         first := lostack[nstack]; 
+       BEGIN
+         first := lostack[nstack];
          last := histack[nstack];
          nstack := nstack-1;
        END;
@@ -477,7 +477,7 @@ BEGIN (* ShellSort *)
     FOR i := (incr+first) TO last DO BEGIN
         j := i-incr;
         WHILE ( j >first-1) DO
-          IF ( A[j].key>A[j+incr].key ) THEN 
+          IF ( A[j].key>A[j+incr].key ) THEN
              BEGIN
                Switch( A[j], A[j+incr] );
                j := j-incr
@@ -487,7 +487,7 @@ BEGIN (* ShellSort *)
     END (* FOR i *);
     incr := ( incr DIV 2 )
   END   (* WHILE *)
-END   (* ShellSort *); 
+END   (* ShellSort *);
 
 
 
@@ -530,18 +530,18 @@ END   (* ShellSort *);
 (* PART B: Using indices for sorting:
 
 Comment : If the  records  involved  are very large data  structures, it is not
-	  really a good idea to switch whole records often. Rather  one  should 
+	  really a good idea to switch whole records often. Rather  one  should
 keep an array of the type:
 
-                  IndexType = array[0..sortlim] of 0..sortlim 
+                  IndexType = array[0..sortlim] of 0..sortlim
 
 which at the start of the sort is initialized so  that  its  index  is also its
-value.  And one can use this array  to  keep  track  of the switches. Here is a 
-sample of what is meant:                                                    
+value.  And one can use this array  to  keep  track  of the switches. Here is a
+sample of what is meant:
 
 PROCEDURE SwitchInd ( VAR ind1, ind2 : integer );
 VAR temp : integer;
-BEGIN 
+BEGIN
    temp := ind1; ind1 := ind2; ind2 := temp
 END;
 
@@ -584,7 +584,7 @@ Questions:
 1. Rewrite the other sorts in part A using index switching instead of record
    switching.
 
-2. Write the appropriate procedure for sending to output the list of all 
+2. Write the appropriate procedure for sending to output the list of all
    elements from first to last in their sorted order.  *)
 
 
@@ -593,3 +593,4 @@ Questions:
 
 
 (* ------------------------------------------------------------------------- *)
+

@@ -12,7 +12,7 @@ TYPE
      SortArray = ARRAY [0..sortlim] OF RecordType;
 
 VAR
-     A                   : SortArray;
+     A,B,C,D,E,F,G       : SortArray;
      First,Last          : integer;
      CmpCnt,SwtCnt,AsgCnt: integer;
 
@@ -393,7 +393,7 @@ PROCEDURE nrquicksort ( VAR A : sortarray ; first, last : integer );
   (* implements a non recursive version of quicksort with a pair
      of stacks that keep track of the boundaries for the partitioned sets *)
 CONST
-      maxstack   = round(ln(sortlim)/ln(2))+1; (* log(n) choice *)
+      maxstack   = 1;
 TYPE
       stacktype  = ARRAY [1..maxstack] OF 0..sortlim;
 VAR
@@ -521,7 +521,7 @@ PROCEDURE NrAltQuickSort( VAR A : sortarray; first, last: integer);
       uses two stacks to keep track of ends of partitioned sets *)
 
 CONST
-    maxstack = round(ln(sortlim)/ln(2))+1; (* tight but adequate estimate *)
+    maxstack = 1;
 TYPE
     stacktype = array [1..maxstack] OF integer;
 VAR
@@ -604,16 +604,62 @@ BEGIN (* ShellSort *)
 END   (* ShellSort *);
 
 (*--------------------------- MAIN ---------------------------------------*)
+
 BEGIN  {SortMeas}
    AsgCnt := 0; SwtCnt := 0; CmpCnt := 0;
    Last := Init(A);
+   B := A;
+   C := A;
+   D := A;
+   e := a;
+   f := a;
+   g := a;
    First := 1;
-   Print(A,First,Last);
    BubbleSort(A,First,Last);
+   Report(A,First,Last);
+   First := 1;
+   asgcnt := 0;swtcnt:=0;cmpcnt:=0;
+   InsertSort(b,First,Last);
    Writeln;
-   Print(A,First,Last);
+   Print(b,First,Last);
    Writeln('    Compares   Switches   Assign');
-   Writeln(cmpcnt,swtcnt,asgcnt);
+   Writeln('Ins  ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   SelectSort(c,First,Last);
+   Writeln;
+   Print(C,First,Last);
+   Writeln('    Compares   Switches   Assign');
+   Writeln('Sel  ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   HeapSort(D,First,Last);
+   Writeln;
+   Print(D,First,Last);
+   Writeln('    Compares   Switches   Assign');
+   Writeln('Heap ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   QuickSort(e,First,Last);
+   Writeln;
+   Print(e,First,Last);
+   Writeln('    Compares   Switches   Assign');
+   Writeln('Quick ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   AltQuickSort(f,First,Last);
+   Writeln;
+   Print(f,First,Last);
+   Writeln('    Compares   Switches   Assign');
+   Writeln('aQuick ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   First := 1;
+   asgcnt:=0;swtcnt:=0;cmpcnt:=0;
+   ShellSort(g,First,Last);
+   Writeln;
+   Print(g,First,Last);
+   Writeln('    Compares   Switches   Assign');
+   Writeln('shell ',cmpcnt,'     ',swtcnt,'      ',asgcnt);
+   report(9,last);
 END.
 
 

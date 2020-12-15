@@ -1,10 +1,7 @@
 (* Adapted from umb$disk2:[math.cs210.queue]queuepack1.pas *)
 
 TYPE
- QEltType = RECORD
-              Cmd  : String;
-              Time : String;
-            END;
+ QEltType = String;
  QPtrType = ^Qnode;
  Qnode = RECORD
            Item : QEltType;
@@ -72,7 +69,6 @@ PROCEDURE DeQueue( VAR Elmt : QEltType;
 VAR Temp : QptrType;
 
 BEGIN (* dequeue *)
-   New(Temp);
    WITH Q DO BEGIN
                  (* set up for disposal of front *)
      Temp := Front;
@@ -82,7 +78,7 @@ BEGIN (* dequeue *)
      IF (Front=NIL)
      THEN Back := NIL;  (* queue is empty again *)
              (* return old front, now in temp, to free space *)
-     Dispose(Temp);
+     Dispose(Temp)
    END
 END (* dequeue *);
 (***********************************************************************)
@@ -93,15 +89,14 @@ PROCEDURE PrintQ( Q: Qtype);
 VAR Tmp: QPtrType;
 
 BEGIN  (* printq *)
-  New(Tmp);
   Tmp := Q.Front;
-  WHILE Tmp^.Next <> Nil DO
+  WHILE Tmp.Front <> Nil DO
     BEGIN
-       Writeln(Output,Tmp^.Item.Cmd);
-       Tmp := Tmp^.Next;
-    END;
-  Writeln(Output,Tmp^.Item.Cmd);
-  Writeln(Output,'<eoq>');
+       PutStr(Tmp.Front^.Item,STDOUT,80);
+       Tmp := Tmp.Front^.Next;
+    END
+    PutStr(Tmp.Front^.Item,STDOUT);
+    Putc(LESS);Putc(lete);Putc(leto);Putc(letq);Putc(Greater);
+    Putc(Newline);
 END;  (* printq *)
-
 
